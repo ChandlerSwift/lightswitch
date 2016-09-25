@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'>
+<title>Chandler's Light Switch</title>
+<style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
+<script>var on="on"; var off="off"; function turn(arg){var xhttp = new XMLHttpRequest();xhttp.open('GET','/'+arg,true);xhttp.send();}
+	function getStatus(url){
+	  var xhttp = new XMLHttpRequest();
+	  xhttp.onreadystatechange = function() {
+		if (this.readyState == 4 && this.status == 200) {
+		  document.getElementById(url + "_response").innerHTML = ": " + this.responseText;
+		}
+	  };
+	  xhttp.open("GET", "/" + url, true);
+	  xhttp.send();
+	}
+</script>
+</head>
+<body>
+<header>
+<h1>Chandler's Light Switch</h1>
+</header>
+<section>
+<h2>Control</h2>
+<ul>
+<li>Turns <a href='#' onclick='turn(on)'>on</a></li>
+<li>Turns <a href='#' onclick='turn(off)'>off</a></li>
+<li>Gets <a href='#' onclick='getStatus("status")'>status</a><span id="status_response"></span></li>
+<li>Gets <a href='#' onclick='getStatus("brightness")'>room brightness (1&ndash;1024)</a><span id="brightness_response"></span></li>
+</ul>
+</section>
+<section>
+<h2>Documentation</h2>
+<ul>
+<li><a href='/on'>Turn light on</a> (Basic Auth)</li>
+<li><a href='/off'>Turn light off</a> (Basic Auth)</li>
+<li><a href='/status'>Get light status</a> (no auth required)</li>
+<li><a href='/brightness'>Get room brightness</a> (no auth required)</li>
+</ul>
+</section>
+<section>
+<h2>Credits</h2>
+<p><a href='https://chandlerswift.com/'>Chandler Swift</a>, web/hardware. <a href="https://ericvillnow.com/">Eric Villnow</a>, Android app.</p></section>
+<section>
+<h2>Source</h2>
+<p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
+</section>
+</body>
+</html>
