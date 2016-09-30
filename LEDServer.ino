@@ -3,9 +3,10 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include "FS.h"
+//#include "led_light.h"
 
-const char* ssid = "ssid";
-const char* password = "pass";
+const char* ssid = "ABRAHAM_LINKSYS_EXT";
+const char* password = "slbiscay";
 IPAddress ip(192,168,1,5);  //Node static IP
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
@@ -15,13 +16,16 @@ ESP8266WebServer server(80);
 const char* www_username = "user";
 const char* www_password = "pass";
 
-const int led = 2;
-bool light_off = true;  
+const int led = 2; // status light
+const int relay = 5; // external light
+bool light = true;
+bool on = true;
+bool off = false;
 
-void handleRoot() {
-  File file = SPIFFS.open("/index.html", "r");
-  server.streamFile(file, "text/html");
-  file.close();
+void setLight(bool state) {
+  light = state;
+  digitalWrite(led, !light); // inverted because grounding activates
+  digitalWrite(relay, light);
 }
 
 void handleNotFound(){
@@ -42,8 +46,8 @@ void handleNotFound(){
 void setup(void){
   SPIFFS.begin();
   pinMode(led, OUTPUT);
-  light_off = true;
-  digitalWrite(led, light_off);
+  pinMode(relay, OUTPUT);
+  setLight(off);
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
@@ -64,26 +68,28 @@ void setup(void){
     Serial.println("MDNS responder started");
   }
 
-  server.on("/", handleRoot);
+  server.on("/", [](){
+      File file = SPIFFS.open("/index.html", "r");
+      server.streamFile(file, "text/html");
+      file.close();
+    });
 
   server.on("/on", [](){
     if(!server.authenticate(www_username, www_password))
       return server.requestAuthentication();
-    light_off = false;
-    digitalWrite(led, light_off);
+    setLight(on);
     server.send(200, "text/plain", "on");
   });
   
   server.on("/off", [](){
     if(!server.authenticate(www_username, www_password))
       return server.requestAuthentication();
-    light_off = true;
-    digitalWrite(led, light_off);
+    setLight(off);
     server.send(200, "text/plain", "off");
   });
 
   server.on("/status", [](){
-    server.send(200, "text/plain", light_off ? "off" : "on");
+    server.send(200, "text/plain", light ? "on" : "off");
   });
 
   server.on("/brightness", [](){
