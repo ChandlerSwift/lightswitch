@@ -4,9 +4,10 @@
 #include <ESP8266mDNS.h>
 #include "FS.h"
 //#include "led_light.h"
+#include "overhead_light.h"
 
-const char* ssid = "ABRAHAM_LINKSYS_EXT";
-const char* password = "slbiscay";
+const char* ssid = "SWIFT";
+const char* password = "tempswift";
 IPAddress ip(192,168,1,5);  //Node static IP
 IPAddress gateway(192,168,1,1);
 IPAddress subnet(255,255,255,0);
@@ -16,17 +17,7 @@ ESP8266WebServer server(80);
 const char* www_username = "user";
 const char* www_password = "pass";
 
-const int led = 2; // status light
-const int relay = 5; // external light
-bool light = true;
-bool on = true;
-bool off = false;
-
-void setLight(bool state) {
-  light = state;
-  digitalWrite(led, !light); // inverted because grounding activates
-  digitalWrite(relay, light);
-}
+OverheadLight light;
 
 void handleNotFound(){
   String message = "File Not Found\n\n";
@@ -43,11 +34,8 @@ void handleNotFound(){
   server.send(404, "text/plain", message);
 }
 
-void setup(void){
+void setup(void){  
   SPIFFS.begin();
-  pinMode(led, OUTPUT);
-  pinMode(relay, OUTPUT);
-  setLight(off);
   Serial.begin(115200);
   WiFi.begin(ssid, password);
   WiFi.config(ip, gateway, subnet);
@@ -77,19 +65,19 @@ void setup(void){
   server.on("/on", [](){
     if(!server.authenticate(www_username, www_password))
       return server.requestAuthentication();
-    setLight(on);
+    light.set(true);
     server.send(200, "text/plain", "on");
   });
   
   server.on("/off", [](){
     if(!server.authenticate(www_username, www_password))
       return server.requestAuthentication();
-    setLight(off);
+    light.set(false);
     server.send(200, "text/plain", "off");
   });
 
   server.on("/status", [](){
-    server.send(200, "text/plain", light ? "on" : "off");
+    server.send(200, "text/plain", light.get() ? "on" : "off");
   });
 
   server.on("/brightness", [](){
