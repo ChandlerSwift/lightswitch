@@ -3,53 +3,85 @@
 #include <ESP8266WebServer.h>
 #include <WiFiManager.h> //https://github.com/tzapu/WiFiManager WiFi Configuration Magic
 #include "FS.h"
-//#include "led_light.h"
-#include "overhead_light.h"
+#include "light.h"
 
 ESP8266WebServer server(80);
-
 const char* www_username = "user";
 const char* www_password = "pass";
 
-OverheadLight light;
+bool authRequired = false;
 
-void setup(void){  
+const int numLights = 5;
+Light* lights[numLights];
+Light *r, *g, *b;
+
+int interruptPin = 4;
+bool door_control = false;
+void setLightState() {
+  if (door_control)
+    lights[1]->set(digitalRead(interruptPin) == LOW);
+}
+
+void setup(void){
+  lights[0] = new Light(2, false, true); // built-in led
+  lights[1] = new Light(15);              // Relay light
+  lights[2] = r = new Light(14, true);   // LED strip red channel
+  lights[3] = g = new Light(12, true);   // LED strip green channel
+  lights[4] = b = new Light(13, true);   // LED strip blue channel
+  
   SPIFFS.begin();
   Serial.begin(115200);
   WiFiManager wifiManager;
   wifiManager.setSTAStaticIPConfig(IPAddress(192,168,1,5), IPAddress(192,168,1,1), IPAddress(255,255,255,0));
   wifiManager.autoConnect("ESP_CONFIG"); // Will set up as AP if necessary
 
+  // Serve control page
   server.on("/", [](){
-      File file = SPIFFS.open("/index.html", "r");
-      server.streamFile(file, "text/html");
-      file.close();
-    });
+    File file = SPIFFS.open("/index.html", "r");
+    server.streamFile(file, "text/html");
+    file.close();
+  });
 
-  server.on("/on", [](){
-    if(!server.authenticate(www_username, www_password))
+  server.on("/light/on", [](){
+    if(!server.authenticate(www_username, www_password) && authRequired)
       return server.requestAuthentication();
-    light.set(true);
+    lights[server.arg("id").toInt()]->set(true);
     server.send(200, "text/plain", "on");
   });
   
-  server.on("/off", [](){
-    if(!server.authenticate(www_username, www_password))
+  server.on("/light/off", [](){
+    if(!server.authenticate(www_username, www_password) && authRequired)
       return server.requestAuthentication();
-    light.set(false);
+    lights[(int)server.arg("id").toInt()]->set(false);
     server.send(200, "text/plain", "off");
   });
 
-  server.on("/status", [](){
-    server.send(200, "text/plain", light.get() ? "on" : "off");
+  server.on("/light/status", [](){
+    server.send(200, "text/plain", lights[server.arg("id").toInt()]->get() ? "on" : "off");
   });
 
-  server.on("/brightness", [](){
+  server.on("/settings/doorsensor/enable", [](){
+    if(!server.authenticate(www_username, www_password) && authRequired)
+      return server.requestAuthentication();
+    door_control = true;
+    server.send(200, "text/plain", "enabled");
+  });
+
+  server.on("/settings/doorsensor/disable", [](){
+    if(!server.authenticate(www_username, www_password) && authRequired)
+      return server.requestAuthentication();
+    door_control = false;
+    server.send(200, "text/plain", "disabled");
+  });  
+  
+  server.on("/sensor/brightness", [](){
     server.send(200, "text/plain", (String)analogRead(A0));
   });
 
   server.begin();
   Serial.println("HTTP server started");
+  pinMode(interruptPin, INPUT_PULLUP);
+  //attachInterrupt(digitalPinToInterrupt(interruptPin), setLightState, CHANGE);
 }
 
 void loop(void){
