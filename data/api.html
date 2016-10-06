@@ -8,29 +8,29 @@
 </head>
 <body>
 <header>
-<h1>Switch API <small>(Back to <a href="./">Control</a> Page</small></h1>
+<h1>Switch API <small>(Back to <a href="./">Control</a> Page)</small></h1>
 </header>
 <section>
-<h2>Theory</h2>
-<p>Note: This documentation is mostly complete, but the <a href="./">web control page</a> should serve as the reference implementation.</p>
+<h2>Introduction</h2>
+<p>Note: This documentation is mostly complete. The <a href="./">web control page</a> should serve as the reference implementation.</p>
 <p>Each switchable output is represented as a light. The built-in LED is numbered 0, the main relay-driven light is 1, the red channel is 2, and so on. Each light can be turned on and off, and its status retrieved.</p>
-<!--<p>Beyond this, LED strips are "dimmable", so they can be set to partial brightness. These are set with a range of 0 to 255.</p>-->
+<p>Beyond this, LED lights are "dimmable", so they can be set to partial brightness. These are set with a range of 0 to 255.</p>
 </section>
 <section>
 <h2>Light</h2>
-<p>For each command, ID should be replaced with the light's integer value (0-5).</p>
+<p>Lights are set using the /light/set URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
+<p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
 <ul>
-<li>Turn on the light: <code>/light/on?id=ID</code></li>
-<li>Turn off the light: <code>/light/off?id=ID</code></li>
-<li>Get light status: <code>/light/status?id=ID</code></li>
+<li>Non-dimmable lights are set using 0 and 1 values to represent on and off. Any non-zero number will be treated as a 1.</li>
+<li>Dimmable lights are set using PWM to a value from 0 to 255, where 0 is off and 255 is fully on. Values over or under this range will be truncated to 255 or zero, respectively.</li>
+</ul>
+<p>Examples:</p>
+<ul>
+<li>Turn on the main light: <code>/light/set?1=1</code></li>
+<li>Turn off the main light and turn on the red and green LEDs: <code>/light/set?1=0&2=255&3=255</code></li>
+<li>Turn off the main light and set LEDs to a white color: <code>/light/set?1=0&2=255&3=255&4=50</code></li>
 </ul>
 </section>
-<!--<section>
-<h2>Dimmable Light extends Light</h2>
-<ul>
-<li></li>
-</ul>
-</section>-->
 <h2>Source</h2>
 <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
