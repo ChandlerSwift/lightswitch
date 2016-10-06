@@ -6,9 +6,9 @@
 <title>Chandler's Light Switch</title>
 <style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
 <script>
-	function turn(arg, id) {
+	function turn(brightness, id) {
 		var xhttp = new XMLHttpRequest();
-		xhttp.open('GET','https://duluth.chandlerswift.com/5/light/'+arg+'?id='+id,true);
+		xhttp.open('GET','https://duluth.chandlerswift.com/5/light/set?'+id+'='+brightness,true);
 		xhttp.send();
 	}
 	function getStatus(id){
@@ -33,18 +33,27 @@
 <section>
 <h2>Main Light</h2>
 <ul>
-<li>Turns <a href='#' onclick='turn("on",1);getStatus(1)'>on</a></li>
-<li>Turns <a href='#' onclick='turn("off",1);getStatus(1)'>off</a></li>
+<li>Turns <a href='#' onclick='turn(1,1);getStatus(1)'>on</a></li>
+<li>Turns <a href='#' onclick='turn(0,1);getStatus(1)'>off</a></li>
 <li>Gets <a href='#' onclick='getStatus(1)'>status</a><span id="status_response_1"></span></li>
 </ul>
 </section>
 <section>
 <h2>RGB Accent LED Strip</h2>
 <ul>
-<li>Red <a href='#' onclick='turn("on",2);getStatus(2)'>on</a>, <a href='#' onclick='turn("off",2);getStatus(2)'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
-<li>Green <a href='#' onclick='turn("on",3);getStatus(3)'>on</a>, <a href='#' onclick='turn("off",3);getStatus(3)'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
-<li>Blue <a href='#' onclick='turn("on",4);getStatus(4)'>on</a>, <a href='#' onclick='turn("off",4);getStatus(4)'>off</a>, <a href='#' onclick='getStatus(4)'>status</a><span id="status_response_4"></span></li>
+<li>Red <a href='#' onclick='turn(255,2);getStatus(2)'>on</a>, <a href='#' onclick='turn(0,2);getStatus(2)'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
+<li>Green <a href='#' onclick='turn(255,3);getStatus(3)'>on</a>, <a href='#' onclick='turn(0,3);getStatus(3)'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
+<li>Blue <a href='#' onclick='turn(255,4);getStatus(4)'>on</a>, <a href='#' onclick='turn(0,4);getStatus(4)'>off</a>, <a href='#' onclick='getStatus(4)'>status</a><span id="status_response_4"></span></li>
 </ul>
+</section>
+<section>
+<h2>RGB Accent LED Strip Custom Coloring</h2>
+<form action="https://duluth.chandlerswift.com/5/light/set">
+  Red: <input type="number" name="2" min="0" max="255" value="255">
+  Green: <input type="number" name="3" min="0" max="255" value="255">
+  Blue: <input type="number" name="4" min="0" max="255" value="255">
+  <input type="submit">
+</form>
 </section>
 <section>
 <h2>Credits</h2>

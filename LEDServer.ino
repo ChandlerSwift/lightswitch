@@ -23,7 +23,10 @@ void setLightState() {
 }
 
 void setup(void){
-  lights[0] = new Light(2, false, true); // built-in led
+  analogWriteRange(255);
+  analogWriteFreq(59);
+  
+  lights[0] = new Light(2, true, true); // built-in led
   lights[1] = new Light(15);              // Relay light
   lights[2] = r = new Light(14, true);   // LED strip red channel
   lights[3] = g = new Light(12, true);   // LED strip green channel
@@ -42,22 +45,17 @@ void setup(void){
     file.close();
   });
 
-  server.on("/light/on", [](){
+  server.on("/light/set", [](){
     if(!server.authenticate(www_username, www_password) && authRequired)
       return server.requestAuthentication();
-    lights[server.arg("id").toInt()]->set(true);
-    server.send(200, "text/plain", "on");
-  });
-  
-  server.on("/light/off", [](){
-    if(!server.authenticate(www_username, www_password) && authRequired)
-      return server.requestAuthentication();
-    lights[(int)server.arg("id").toInt()]->set(false);
-    server.send(200, "text/plain", "off");
+    for (int i = 0; i < numLights; i++)
+      if (server.hasArg(String(i)))
+        lights[i]->set(server.arg(String(i)).toInt());
+    server.send(200, "text/plain", "Changes applied");
   });
 
   server.on("/light/status", [](){
-    server.send(200, "text/plain", lights[server.arg("id").toInt()]->get() ? "on" : "off");
+    server.send(200, "text/plain", String(lights[server.arg("id").toInt()]->get()));
   });
 
   server.on("/settings/doorsensor/enable", [](){
@@ -81,7 +79,7 @@ void setup(void){
   server.begin();
   Serial.println("HTTP server started");
   pinMode(interruptPin, INPUT_PULLUP);
-  //attachInterrupt(digitalPinToInterrupt(interruptPin), setLightState, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(interruptPin), setLightState, CHANGE);
 }
 
 void loop(void){

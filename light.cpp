@@ -9,33 +9,30 @@ Light::Light (int light_pin, bool is_dimmable, bool is_inverse) : pin(light_pin)
   }
   Serial.println(".");
   pinMode(pin, OUTPUT);
-  set(false);
-}
-
-void Light::set(bool is_on) {
-  Serial.print(String("Turning ") + (is_on ? "on" : "off") + " light ");
-  Serial.print(pin);
-  Serial.println(".");
-  status = is_on;
-  digitalWrite(pin, inverse != status);
+  set(0);
 }
 
 void Light::set(int new_brightness) {
+  Serial.println(new_brightness);
+  if (dimmable) {
+    // bounds checking
+    if (new_brightness < 0) new_brightness = 0;
+    if (new_brightness > 255) new_brightness = 255;
+  } else {
+    // all nonzero are on
+    if (new_brightness != 0) new_brightness = 255;
+  }
   brightness = new_brightness;
-  //digitalWrite(pin, inverse != status);
+  if (inverse) new_brightness = 255 - new_brightness;
+  Serial.print("Setting light on pin ");
+  Serial.print(pin);
+  Serial.print(" to ");
+  Serial.println(brightness);
+  analogWrite(pin, new_brightness);
 }
 
-void Light::on() {
-  status = true;
-  digitalWrite(pin, !inverse);
-}
-void Light::off() {
-  status = false;
-  digitalWrite(pin, inverse);
-}
-
-bool Light::get() {
-  return status;
+int Light::get() {
+  return dimmable ? brightness : brightness/255;
 }
 
 bool Light::isDimmable() {
