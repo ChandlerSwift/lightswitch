@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+<base href="https://duluth.chandlerswift.com/5/">
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <title>Switch API</title>
@@ -14,6 +15,7 @@
 <ul>
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#light">Light</a></li>
+	<li><a href="#sensors">Sensors</a></li>
 	<li><a href="#source">Source</a></li>
 </ul>
 </section>
@@ -25,7 +27,7 @@
 </section>
 <section>
 <h2 id="light">Light</h2>
-<p>Lights are set using the /light/set URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
+<p>Lights are set using the <code><a href="light/set">/light/set</a></code> URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
 <p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
 <ul>
 <li>Non-dimmable lights are set using 0 and 1 values to represent on and off. Any non-zero number will be treated as a 1.</li>
@@ -33,9 +35,15 @@
 </ul>
 <p>Examples:</p>
 <ul>
-<li>Turn on the main light: <code>/light/set?1=1</code></li>
-<li>Turn off the main light and turn on the red and green LEDs: <code>/light/set?1=0&2=255&3=255</code></li>
-<li>Turn off the main light and set LEDs to a white color: <code>/light/set?1=0&2=255&3=255&4=50</code></li>
+<li>Turn on the main light: <code><a href="light/set?1=1">/light/set?1=1</a></code></li>
+<li>Turn off the main light and turn on the red and green LEDs: <code><a href="light/set?1=0&2=255&3=255">/light/set?1=0&2=255&3=255</a></code></li>
+<li>Turn off the main light and set LEDs to a white color: <code><a href="light/set?1=0&2=255&3=255&4=50">/light/set?1=0&2=255&3=255&4=50</a></code></li>
+</ul>
+</section>
+<section>
+<h2 id="sensors">Sensors</h2>
+<ul>
+<li>Brightness Sensor, returns value from 0-1023: <code><a href="sensor/brightness">/sensor/brightness</a></code>
 </ul>
 </section>
 <h2 id="source">Source</h2>
