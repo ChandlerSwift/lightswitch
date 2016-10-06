@@ -1,7 +1,8 @@
 #include "light.h"
 #include "Arduino.h"
 
-Light::Light (int light_pin, bool is_dimmable, bool is_inverse) : pin(light_pin), dimmable(is_dimmable), inverse(is_inverse)  {
+Light::Light (int light_pin, String desc, bool is_dimmable, bool is_inverse) : 
+    pin(light_pin), description(desc), dimmable(is_dimmable), inverse(is_inverse)  {
   Serial.print("Setting up light ");
   Serial.print(light_pin);
   if (is_inverse) {
@@ -37,5 +38,9 @@ int Light::get() {
 
 bool Light::isDimmable() {
   return dimmable;
+}
+
+String Light::getDescription() {
+  return description;
 }
 

@@ -25,13 +25,13 @@ void setLightState() {
 void setup(void){
   analogWriteRange(255);
   analogWriteFreq(59);
-  
-  lights[0] = new Light(2, true, true); // built-in led
-  lights[1] = new Light(15);              // Relay light
-  lights[2] = r = new Light(14, true);   // LED strip red channel
-  lights[3] = g = new Light(12, true);   // LED strip green channel
-  lights[4] = b = new Light(13, true);   // LED strip blue channel
-  
+
+  lights[0] = new Light(2, "Built-in Status LED", true, true); // built-in led
+  lights[1] = new Light(15, "Main Light");              // Relay light
+  lights[2] = r = new Light(14, "RGB LED Strip: Red Channel", true);   // LED strip red channel
+  lights[3] = g = new Light(12, "RGB LED Strip: Green Channel", true);   // LED strip green channel
+  lights[4] = b = new Light(13, "RGB LED Strip: Blue Channel", true);   // LED strip blue channel
+
   SPIFFS.begin();
   Serial.begin(115200);
   WiFiManager wifiManager;
