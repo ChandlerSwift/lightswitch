@@ -10,14 +10,21 @@
 <header>
 <h1>Switch API <small>(Back to <a href="./">Control</a> Page)</small></h1>
 </header>
+<section style="border:1px;">
+<ul>
+	<li><a href="#introduction">Introduction</a></li>
+	<li><a href="#light">Light</a></li>
+	<li><a href="#source">Source</a></li>
+</ul>
+</section>
 <section>
-<h2>Introduction</h2>
+<h2 id="introduction">Introduction</h2>
 <p>Note: This documentation is mostly complete. The <a href="./">web control page</a> should serve as the reference implementation.</p>
 <p>Each switchable output is represented as a light. The built-in LED is numbered 0, the main relay-driven light is 1, the red channel is 2, and so on. Each light can be turned on and off, and its status retrieved.</p>
 <p>Beyond this, LED lights are "dimmable", so they can be set to partial brightness. These are set with a range of 0 to 255.</p>
 </section>
 <section>
-<h2>Light</h2>
+<h2 id="light">Light</h2>
 <p>Lights are set using the /light/set URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
 <p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
 <ul>
@@ -31,7 +38,7 @@
 <li>Turn off the main light and set LEDs to a white color: <code>/light/set?1=0&2=255&3=255&4=50</code></li>
 </ul>
 </section>
-<h2>Source</h2>
+<h2 id="source">Source</h2>
 <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
 </body>
