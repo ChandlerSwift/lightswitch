@@ -45,6 +45,13 @@ void setup(void){
     file.close();
   });
 
+  // Serve API Reference page
+  server.on("/api.html", [](){
+    File file = SPIFFS.open("/api.html", "r");
+    server.streamFile(file, "text/html");
+    file.close();
+  });
+
   server.on("/light/set", [](){
     if(!server.authenticate(www_username, www_password) && authRequired)
       return server.requestAuthentication();
