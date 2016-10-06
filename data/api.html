@@ -39,12 +39,13 @@
 <li>Turn off the main light and turn on the red and green LEDs: <code><a href="light/set?1=0&2=255&3=255">/light/set?1=0&2=255&3=255</a></code></li>
 <li>Turn off the main light and set LEDs to a white color: <code><a href="light/set?1=0&2=255&3=255&4=50">/light/set?1=0&2=255&3=255&4=50</a></code></li>
 </ul>
-<p>Status of a light can be found at the <code><a href="light/status">/light/status</a></code> URI.
+<p>Status of a light can be found at the <code><a href="light/status">/light/status</a></code> URI.</p>
 <ul>
 <li>For non-dimmable lights, value returned will be 0 or 1.</li>
 	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
 <li>For dimmable lights, value returned will be 0 to 255, inclusive.</li>
 	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
+</ul>
 </section>
 <section>
 <h2 id="sensors">Sensors</h2>
@@ -52,6 +53,7 @@
 <li>Brightness Sensor, returns value from 0-1023: <code><a href="sensor/brightness">/sensor/brightness</a></code>
 </ul>
 </section>
+<section>
 <h2 id="source">Source</h2>
 <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
