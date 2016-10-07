@@ -52,6 +52,20 @@ void setup(void){
     file.close();
   });
 
+  server.on("/lights", []() {
+    String response = "[";
+    for (int i = 0; i < numLights; i++)
+      response += String(i ? "," : "") + // comma if not first entry
+                  "{\"status\":" +
+                  lights[i]->get() +
+                  ",\"dimmable\":" +
+                  (lights[i]->isDimmable() ? "1" : "0") +
+                  ",\"description\":\"" +
+                  lights[i]->getDescription() + "\"}"; // comma all but last time
+    response += "]";
+    server.send(200, "text/plain", response);
+  });
+
   server.on("/light/set", [](){
     if(!server.authenticate(www_username, www_password) && authRequired)
       return server.requestAuthentication();
