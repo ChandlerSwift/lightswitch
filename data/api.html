@@ -16,6 +16,7 @@
 	<li><a href="#introduction">Introduction</a></li>
 	<li><a href="#light">Light</a></li>
 	<li><a href="#sensors">Sensors</a></li>
+	<li><a href="#jsoninfo">JSON Info</a></li>
 	<li><a href="#source">Source</a></li>
 </ul>
 </section>
@@ -52,6 +53,25 @@
 <ul>
 <li>Brightness Sensor, returns value from 0-1023: <code><a href="sensor/brightness">/sensor/brightness</a></code>
 </ul>
+</section>
+<section>
+<h2 id="jsoninfo">JSON Info</h2>
+<p><code><a href="lights">/lights</a></code> will return a JSON document with information about the configured lights.</p>
+<p>Sample Response (truncated):</p>
+<div style="padding: 0 20px;">
+	<pre><code>[
+  {
+    "status": 255,
+    "dimmable": 1,
+    "description": "Built-in Status LED"
+  },
+  {
+    "status": 1,
+    "dimmable": 0,
+    "description": "Main Light"
+  }, ...
+]</code></pre>
+</div>
 </section>
 <section>
 <h2 id="source">Source</h2>
