@@ -1,64 +1,77 @@
 <!DOCTYPE html>
 <html>
 <head>
-<base href="https://duluth.chandlerswift.com/5/">
-<meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Switch API</title>
-<style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title>Switch API</title>
+    <style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
 </head>
 <body>
 <header>
-<h1>Switch API <small>(Back to <a href="./">Control</a> Page)</small></h1>
+    <h1>Switch API <small>(Back to <a href="./">Control</a> Page)</small></h1>
 </header>
 <section>
-<ul>
-	<li><a href="#introduction">Introduction</a></li>
-	<li><a href="#light">Light</a></li>
-	<li><a href="#sensors">Sensors</a></li>
-	<li><a href="#jsoninfo">JSON Info</a></li>
-	<li><a href="#source">Source</a></li>
-</ul>
+    <ul>
+        <li><a href="#introduction">Introduction</a></li>
+        <li><a href="#light">Light</a></li>
+        <li><a href="#sensors">Sensors</a></li>
+        <li><a href="#localcontrol">Local Control</a></li>
+        <li><a href="#jsoninfo">JSON Info</a></li>
+        <li><a href="#serversideoptions">Server-Side Options</a></li>
+        <li><a href="#source">Source</a></li>
+    </ul>
 </section>
 <section>
-<h2 id="introduction">Introduction</h2>
-<p>Note: This documentation is mostly complete. The <a href="./">web control page</a> should serve as the reference implementation.</p>
-<p>Each switchable output is represented as a light. The built-in LED is numbered 0, the main relay-driven light is 1, the red channel is 2, and so on. Each light can be turned on and off, and its status retrieved.</p>
-<p>Beyond this, LED lights are "dimmable", so they can be set to partial brightness. These are set with a range of 0 to 255.</p>
+    <h2 id="introduction">Introduction</h2>
+    <p>Note: This documentation is mostly complete. The <a href="./">web control page</a> should serve as the reference implementation.</p>
+    <p>Each switchable output is represented as a light. The built-in LED is numbered 0, the main relay-driven light is 1, the red channel is 2, and so on. Each light can be turned on and off, and its status retrieved.</p>
+    <p>Beyond this, LED lights are dimmable and can be set to partial brightness, with a range of 0 to 255. It should be noted that many lights are not linear: For example, the built-in LED has most of its range in the zero to ten percent region, while many LED strips require a duty cycle of more than 20% to be even visible.</p>
 </section>
 <section>
-<h2 id="light">Light</h2>
-<p>Lights are set using the <code><a href="light/set">/light/set</a></code> URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
-<p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
-<ul>
-<li>Non-dimmable lights are set using 0 and 1 values to represent on and off. Any non-zero number will be treated as a 1.</li>
-<li>Dimmable lights are set using PWM to a value from 0 to 255, where 0 is off and 255 is fully on. Values over or under this range will be truncated to 255 or zero, respectively.</li>
-</ul>
-<p>Examples:</p>
-<ul>
-<li>Turn on the main light: <code><a href="light/set?1=1">/light/set?1=1</a></code></li>
-<li>Turn off the main light and turn on the red and green LEDs: <code><a href="light/set?1=0&2=255&3=255">/light/set?1=0&2=255&3=255</a></code></li>
-<li>Turn off the main light and set LEDs to a white color: <code><a href="light/set?1=0&2=255&3=255&4=50">/light/set?1=0&2=255&3=255&4=50</a></code></li>
-</ul>
-<p>Status of a light can be found at the <code><a href="light/status">/light/status</a></code> URI.</p>
-<ul>
-<li>For non-dimmable lights, value returned will be 0 or 1.</li>
-	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
-<li>For dimmable lights, value returned will be 0 to 255, inclusive.</li>
-	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
-</ul>
+    <h2 id="light">Light</h2>
+    <p>Lights are set using the <code><a href="light/set">/light/set</a></code> URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
+    <p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
+    <ul>
+        <li>Non-dimmable lights are set using 0 and 1 values to represent on and off. Any non-zero number will be treated as a 1.</li>
+        <li>Dimmable lights are set using PWM to a value from 0 to 255, where 0 is off and 255 is fully on. Values over or under this range will be truncated to 255 or zero, respectively.</li>
+    </ul>
+    <p>Examples:</p>
+    <ul>
+        <li>Turn on the main light: <code><a href="light/set?1=1">/light/set?1=1</a></code></li>
+        <li>Turn off the main light and turn on the red and green LEDs: <code><a href="light/set?1=0&2=255&3=255">/light/set?1=0&2=255&3=255</a></code></li>
+        <li>Turn off the main light and set LEDs to a white color: <code><a href="light/set?1=0&2=255&3=255&4=50">/light/set?1=0&2=255&3=255&4=50</a></code></li>
+    </ul>
+    <p>Status of a light can be found at the <code><a href="light/status">/light/status</a></code> URI.</p>
+    <ul>
+        <li>For non-dimmable lights, value returned will be 0 or 1.</li>
+        <ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
+        <li>For dimmable lights, value returned will be 0 to 255, inclusive.</li>
+        <ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
+    </ul>
 </section>
 <section>
-<h2 id="sensors">Sensors</h2>
-<ul>
-<li>Brightness Sensor, returns value from 0-1023: <code><a href="sensor/brightness">/sensor/brightness</a></code>
-</ul>
+    <h2 id="sensors">Sensors</h2>
+    <p>In addition to outputs, the switch has a number of sensor inputs which can be queried.</p>
+    <ul>
+        <li>Door sensor: Returns 1 if door open and 0 if door closed. This sensor is also used for automatic light control when the door is opened and closed.<code><a href="sensor/brightness">/sensor/brightness</a></code></li>
+        <li>Brightness Sensor, returns value from 0&ndash;1023: <code><a href="sensor/brightness">/sensor/brightness</a></code></li>
+    </ul>
 </section>
 <section>
-<h2 id="jsoninfo">JSON Info</h2>
-<p><code><a href="lights">/lights</a></code> will return a JSON document with information about the configured lights.</p>
-<p>Sample Response (truncated):</p>
-<div style="padding: 0 20px;">
+    <h2 id="localcontrol">Local Control</h2>
+    <p>In events where web control is impractical or even impossible, the light is also configured with a local switch. The switch is a simple pushbutton which toggles the state of the light.</p>
+    <p>Because there are multiple lights which can be turned on at a time, the following algorithm determines the action of the button:</p>
+    <ul>
+        <li>If the main light is on, turns off</li>
+        <li>If the main light is not on but the LEDs are, turns off LEDs</li>
+        <li>If no lights are on, turns on main light</li>
+    </ul>
+</section>
+<section>
+    <h2 id="jsoninfo">JSON Info</h2>
+    <p><code><a href="lights">/lights</a></code> will return a JSON document with information about the configured lights.</p>
+    <p>Sample Response (truncated and formatted):</p>
+    <div style="padding: 0 20px;">
 	<pre><code>[
   {
     "status": 255,
@@ -71,11 +84,20 @@
     "description": "Main Light"
   }, ...
 ]</code></pre>
-</div>
+    </div>
 </section>
 <section>
-<h2 id="source">Source</h2>
-<p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
+    <h2 id="serversideoptions">Server-Side Options</h2>
+    <p>The autonomous actions taken by the switch are all customizable.</p>
+    <ul>
+        <li>If the main light is on, turns off</li>
+        <li>If the main light is not on but the LEDs are, turns off LEDs</li>
+        <li>If no lights are on, turns on main light</li>
+    </ul>
+</section>
+<section>
+    <h2 id="source">Source</h2>
+    <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
 </body>
 </html>
