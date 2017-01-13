@@ -12,10 +12,11 @@
  *  2:  Built-in status LED
  *  4:  Door switch sensor
  *  5:  Manual control button
- *  12: LED green channel
- *  13: LED blue channel
+ *  12: Always-on voltage reference
+ *  13: LED green channel
  *  14: LED red channel
  *  15: Main light
+ *  16: LED blue channel
  */
 
 ESP8266WebServer server(80);
@@ -27,7 +28,7 @@ bool authRequired = false;
 const int numLights = 5;
 Light* lights[numLights];
 
-int enable_switch_pin = 0;
+// int enable_switch_pin = 0;
 
 int door_pin = 4;
 bool door_control = false;
@@ -55,6 +56,10 @@ void toggleLightOnButtonPress() {
 }
 
 void setup(void) {
+  // 3.3 Reference voltage for Logic Level Converter
+  pinMode(12, OUTPUT);
+  digitalWrite(12, HIGH);
+
   // Set up PWM
   analogWriteRange(255);
   analogWriteFreq(200);
@@ -62,8 +67,8 @@ void setup(void) {
   lights[0] = new Light(2, "Built-in Status LED", true, true);       // built-in led
   lights[1] = new Light(15, "Main Light");                           // Relay light
   lights[2] = new Light(14, "RGB LED Strip: Red Channel", true);     // LED strip red channel
-  lights[3] = new Light(12, "RGB LED Strip: Green Channel", true);   // LED strip green channel
-  lights[4] = new Light(13, "RGB LED Strip: Blue Channel", true);    // LED strip blue channel
+  lights[3] = new Light(13, "RGB LED Strip: Green Channel", true);   // LED strip green channel
+  lights[4] = new Light(16, "RGB LED Strip: Blue Channel", true);    // LED strip blue channel
 
   // Start Filesystem
   SPIFFS.begin();
@@ -142,7 +147,7 @@ void setup(void) {
   });
 
   server.on("/sensor/door", []() {
-    server.send(200, "text/plain", (String)door_control);f
+    server.send(200, "text/plain", (String)door_control);
   });
 
   server.on("/sensor/brightness", []() {
@@ -157,16 +162,16 @@ void setup(void) {
   server.begin();
   //Serial.println("HTTP server started");
 
-  // Door handler
-  pinMode(door_pin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(door_pin), setLightStateOnDoorAction, CHANGE);
+  //  // Door handler
+  //  pinMode(door_pin, INPUT_PULLUP);
+  //  attachInterrupt(digitalPinToInterrupt(door_pin), setLightStateOnDoorAction, CHANGE);
 
-  // Manual button handler
-  pinMode(button_pin, INPUT_PULLUP);
-  attachInterrupt(digitalPinToInterrupt(button_pin), toggleLightOnButtonPress, RISING);
+  //  // Manual button handler
+  //  pinMode(button_pin, INPUT_PULLUP);
+  //  attachInterrupt(digitalPinToInterrupt(button_pin), toggleLightOnButtonPress, RISING);
 
-  // Online disable switch
-  pinMode(enable_switch_pin, INPUT_PULLUP);
+  //  // Online disable switch
+  //  pinMode(enable_switch_pin, INPUT_PULLUP);
 }
 
 void loop(void) {  
