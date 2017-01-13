@@ -1,66 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'>
-<title>Chandler's Light Switch</title>
-<style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
-<script>
-	function turn(brightness, id) {
-		var xhttp = new XMLHttpRequest();
-		xhttp.open('GET','https://duluth.chandlerswift.com/5/light/set?'+id+'='+brightness,true);
-		xhttp.send();
-	}
-	function getStatus(id){
-	  var xhttp = new XMLHttpRequest();
-	  xhttp.onreadystatechange = function() {
-		if (this.readyState == 4 && this.status == 200) {
-		  document.getElementById("status_response_" + id).innerHTML = ": " + this.responseText;
-		}
-	  };
-	  xhttp.open("GET", "https://duluth.chandlerswift.com/5/light/status?id=" + id, true);
-	  xhttp.send();
-	}
-</script>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title>Chandler's Light Switch</title>
+  <style>body{margin:1em auto;max-width:40em;padding:0 .62em;font:1.2em sans-serif; line-height: 1.62em;}h1,h2,h3{line-height:1.2em;}@media print{body{max-width:none}}</style>
+  <script>
+      function turn(brightness, id) {
+          var xhttp = new XMLHttpRequest();
+          xhttp.open('GET','https://duluth.chandlerswift.com/5/light/set?'+id+'='+brightness,true);
+          xhttp.send();
+      }
+      function getStatus(id){
+          var xhttp = new XMLHttpRequest();
+          xhttp.onreadystatechange = function() {
+              if (this.readyState == 4 && this.status == 200) {
+                  document.getElementById("status_response_" + id).innerHTML = ": " + this.responseText;
+              }
+          };
+          xhttp.open("GET", "https://duluth.chandlerswift.com/5/light/status?id=" + id, true);
+          xhttp.send();
+      }
+  </script>
 </head>
 <body>
 <header>
-<h1>Chandler's Light Switch: <small>A <a href="https://duluth.chandlerswift.com/">Duluth</a> Project</small></h1>
+  <h1>Chandler's Light Switch: <small>A <a href="https://duluth.chandlerswift.com/">Duluth</a> Project</small></h1>
 </header>
 <section>
-<h2><a href="api.html">API Reference</a></h2>
+  <h2><a href="api.html">API Reference</a></h2>
 </section>
 <section>
-<h2>Main Light</h2>
-<ul>
-<li>Turns <a href='#' onclick='turn(1,1);getStatus(1)'>on</a></li>
-<li>Turns <a href='#' onclick='turn(0,1);getStatus(1)'>off</a></li>
-<li>Gets <a href='#' onclick='getStatus(1)'>status</a><span id="status_response_1"></span></li>
-</ul>
+  <h2>Main Light</h2>
+  <ul>
+    <li>Turns <a href='#' onclick='turn(1,1);getStatus(1)'>on</a></li>
+    <li>Turns <a href='#' onclick='turn(0,1);getStatus(1)'>off</a></li>
+    <li>Gets <a href='#' onclick='getStatus(1)'>status</a><span id="status_response_1"></span></li>
+  </ul>
 </section>
 <section>
-<h2>RGB Accent LED Strip</h2>
-<ul>
-<li>Red <a href='#' onclick='turn(255,2);getStatus(2)'>on</a>, <a href='#' onclick='turn(0,2);getStatus(2)'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
-<li>Green <a href='#' onclick='turn(255,3);getStatus(3)'>on</a>, <a href='#' onclick='turn(0,3);getStatus(3)'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
-<li>Blue <a href='#' onclick='turn(255,4);getStatus(4)'>on</a>, <a href='#' onclick='turn(0,4);getStatus(4)'>off</a>, <a href='#' onclick='getStatus(4)'>status</a><span id="status_response_4"></span></li>
-</ul>
+  <h2>RGB Accent LED Strip</h2>
+  <ul>
+    <li>Red <a href='#' onclick='turn(255,2);getStatus(2)'>on</a>, <a href='#' onclick='turn(0,2);getStatus(2)'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
+    <li>Green <a href='#' onclick='turn(255,3);getStatus(3)'>on</a>, <a href='#' onclick='turn(0,3);getStatus(3)'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
+    <li>Blue <a href='#' onclick='turn(255,4);getStatus(4)'>on</a>, <a href='#' onclick='turn(0,4);getStatus(4)'>off</a>, <a href='#' onclick='getStatus(4)'>status</a><span id="status_response_4"></span></li>
+  </ul>
 </section>
 <section>
-<h2>RGB Accent LED Strip Custom Coloring</h2>
-<form action="https://duluth.chandlerswift.com/5/light/set">
-  Red: <input type="number" name="2" min="0" max="255" value="255">
-  Green: <input type="number" name="3" min="0" max="255" value="255">
-  Blue: <input type="number" name="4" min="0" max="255" value="255">
-  <input type="submit">
-</form>
+  <h2>RGB Accent LED Strip Custom Coloring</h2>
+  <form action="https://duluth.chandlerswift.com/5/light/set">
+    Red: <input type="number" name="2" min="0" max="255" value="255">
+    Green: <input type="number" name="3" min="0" max="255" value="255">
+    Blue: <input type="number" name="4" min="0" max="255" value="255">
+    <input type="submit">
+  </form>
 </section>
 <section>
-<h2>Credits</h2>
-<p><a href='https://chandlerswift.com/'>Chandler Swift</a>, web/hardware. <a href="https://ericvillnow.com/">Eric Villnow</a>, Android app.</p></section>
+  <h2>Credits</h2>
+  <p><a href='https://chandlerswift.com/'>Chandler Swift</a>, web/hardware. <a href="https://ericvillnow.com/">Eric Villnow</a>, Android app.</p></section>
 <section>
-<h2>Source</h2>
-<p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
+  <h2>Source</h2>
+  <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
 </body>
 </html>
