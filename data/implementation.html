@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<!--<base href="https://duluth.chandlerswift.com/5/"> TODO: Re-add-->
+<base href="https://duluth.chandlerswift.com/5/">
 <meta charset='utf-8'>
 <meta name='viewport' content='width=device-width, initial-scale=1'>
 <title>Switch API Implementation</title>
@@ -12,49 +12,29 @@
 <header>
 <h1>Switch API Implementation <small>(Back to <a href="./">Control</a> Page)</small></h1>
 </header>
+<div id="content">
+</div>
 <script>
-$.getJSON("light.json", function(result){
-	$.each(result, function(i, field){
-		document.write("asdf");
-		document.write(field + " ");
+$.getJSON("lights", function(result){
+	$.each(result, function(i, light){
+		var c = document.getElementById("content");
+		c.innerHTML+="<section>";
+		c.innerHTML+="<h2>"+light["description"] + "</h2>";
+		c.innerHTML+="</section>";
+		if (light["dimmable"] == 1) {
+			c.innerHTML+="<input type=\"range\" value="+light["status"]+" min=0 max=255 oninput=\"document.getElementById('slider"+i+"').innerHTML = this.value;\"" +
+						 "onChange='$.get(\"light/set?"+i+"=\" + this.value);'>";
+			c.innerHTML+="<span id=\"slider"+i+"\">"+light["status"]+"</span>";
+		} else {
+			c.innerHTML+="<button onclick=\"$.get('light/set?"+i+"=1')\">On</button>"
+			c.innerHTML+="<button onclick=\"$.get('light/set?"+i+"=0')\">Off</button>";
+			c.innerHTML+="<button onclick=\"$.get('light/status?id="+i+"',function(data){alert('Status: ' + data == '1' ? 'on' : 'off');});\">Status</button>";
+		}
 	});
 });
 </script>
-<div></div>
 
 <section>
-<h2 id="introduction">Introduction</h2>
-<p>Note: This documentation is mostly complete. The <a href="./">web control page</a> should serve as the reference implementation.</p>
-<p>Each switchable output is represented as a light. The built-in LED is numbered 0, the main relay-driven light is 1, the red channel is 2, and so on. Each light can be turned on and off, and its status retrieved.</p>
-<p>Beyond this, LED lights are "dimmable", so they can be set to partial brightness. These are set with a range of 0 to 255.</p>
-</section>
-<section>
-<h2 id="light">Light</h2>
-<p>Lights are set using the <code><a href="light/set">/light/set</a></code> URI with parameters either sent as a POST request or in the URL as a GET request. Several can be set at a time.</p>
-<p>Lights can be dimmable or non-dimmable (see the info request below for how to find this).</p>
-<ul>
-<li>Non-dimmable lights are set using 0 and 1 values to represent on and off. Any non-zero number will be treated as a 1.</li>
-<li>Dimmable lights are set using PWM to a value from 0 to 255, where 0 is off and 255 is fully on. Values over or under this range will be truncated to 255 or zero, respectively.</li>
-</ul>
-<p>Examples:</p>
-<ul>
-<li>Turn on the main light: <code><a href="light/set?1=1">/light/set?1=1</a></code></li>
-<li>Turn off the main light and turn on the red and green LEDs: <code><a href="light/set?1=0&2=255&3=255">/light/set?1=0&2=255&3=255</a></code></li>
-<li>Turn off the main light and set LEDs to a white color: <code><a href="light/set?1=0&2=255&3=255&4=50">/light/set?1=0&2=255&3=255&4=50</a></code></li>
-</ul>
-<p>Status of a light can be found at the <code><a href="light/status">/light/status</a></code> URI.
-<ul>
-<li>For non-dimmable lights, value returned will be 0 or 1.</li>
-	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
-<li>For dimmable lights, value returned will be 0 to 255, inclusive.</li>
-	<ul><li>Example: <code><a href="light/status?id=1">/light/status?id=1</a></code>: Returns <code>1</code> or <code>0</code>.</li></ul>
-</section>
-<section>
-<h2 id="sensors">Sensors</h2>
-<ul>
-<li>Brightness Sensor, returns value from 0-1023: <code><a href="sensor/brightness">/sensor/brightness</a></code>
-</ul>
-</section>
 <h2 id="source">Source</h2>
 <p>Improvements? <a href='https://github.com/ChandlerSwift/lightswitch'>Send a pull request on GitHub</a>.</p>
 </section>
