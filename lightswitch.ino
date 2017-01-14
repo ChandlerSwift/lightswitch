@@ -57,7 +57,7 @@ void toggleLightOnButtonPress() {
 int status_led_pin = 2;
 int enable_switch_pin = 0;
 void set_enable_light() { // Called by interrupt on pin 0
-  digitalWrite(status_led_pin, digitalRead(enable_switch_pin) == LOW); // Set status light to switch state
+  digitalWrite(status_led_pin, !(digitalRead(enable_switch_pin) == LOW)); // Set status light to switch state, inverted because the LED is active LOW
 }
 
 bool enable_switch_is_off() {
@@ -70,8 +70,8 @@ void setup(void) {
   digitalWrite(12, HIGH);
 
   // Indicator Light for switch
-  pinmode(status_led_pin, OUTPUT);
-  digitalWrite(status_led_pin, digitalRead(web_control_pin)); // set initial value on startup
+  pinMode(status_led_pin, OUTPUT);
+  digitalWrite(status_led_pin, digitalRead(enable_switch_pin)); // set initial value on startup
 
   // Set up PWM
   analogWriteRange(255);
