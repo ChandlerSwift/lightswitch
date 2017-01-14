@@ -28,15 +28,15 @@
           var xhttp = new XMLHttpRequest();
           xhttp.onreadystatechange = function () {
               if (this.readyState == 4 && this.status == 200) {
+                  getStatus(1);
                   getStatus(2);
                   getStatus(3);
-                  getStatus(4);
               }
           };
           xhttp.open('GET', 'https://duluth.chandlerswift.com/5/light/set' +
-              '?2=' + document.getElementById("red_spinner").value +
-              '&3='+ document.getElementById("green_spinner").value +
-              '&4='+ document.getElementById("blue_spinner").value,
+              '?1=' + document.getElementById("red_spinner").value +
+              '&2='+ document.getElementById("green_spinner").value +
+              '&3='+ document.getElementById("blue_spinner").value,
               true);
           xhttp.send();
       }
@@ -52,17 +52,17 @@
 <section>
   <h2>Main Light</h2>
   <ul>
-    <li>Turns <a href='#' onclick='turn(1,1)'>on</a></li>
-    <li>Turns <a href='#' onclick='turn(0,1)'>off</a></li>
-    <li>Gets <a href='#' onclick='getStatus(1)'>status</a><span id="status_response_1"></span></li>
+    <li>Turns <a href='#' onclick='turn(1,0)'>on</a></li>
+    <li>Turns <a href='#' onclick='turn(0,0)'>off</a></li>
+    <li>Gets <a href='#' onclick='getStatus(0)'>status</a><span id="status_response_0"></span></li>
   </ul>
 </section>
 <section>
   <h2>RGB Accent LED Strip</h2>
   <ul>
-    <li>Red <a href='#' onclick='turn(255,2);'>on</a>, <a href='#' onclick='turn(0,2);'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
-    <li>Green <a href='#' onclick='turn(255,3);'>on</a>, <a href='#' onclick='turn(0,3);'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
-    <li>Blue <a href='#' onclick='turn(255,4);'>on</a>, <a href='#' onclick='turn(0,4);'>off</a>, <a href='#' onclick='getStatus(4)'>status</a><span id="status_response_4"></span></li>
+    <li>Red <a href='#' onclick='turn(255,1);'>on</a>, <a href='#' onclick='turn(0,1);'>off</a>, <a href='#' onclick='getStatus(1)'>status</a><span id="status_response_1"></span></li>
+    <li>Green <a href='#' onclick='turn(255,2);'>on</a>, <a href='#' onclick='turn(0,2);'>off</a>, <a href='#' onclick='getStatus(2)'>status</a><span id="status_response_2"></span></li>
+    <li>Blue <a href='#' onclick='turn(255,3);'>on</a>, <a href='#' onclick='turn(0,3);'>off</a>, <a href='#' onclick='getStatus(3)'>status</a><span id="status_response_3"></span></li>
   </ul>
 </section>
 <section>
