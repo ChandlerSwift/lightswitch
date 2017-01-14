@@ -1,3 +1,12 @@
+// Enables serial printing of debug logs. Comment to disable:
+#define DEBUG 1
+
+#ifdef DEBUG
+ #define DEBUG_PRINT(x)  Serial.println (x)
+#else
+ #define DEBUG_PRINT(x)
+#endif
+
 #ifndef LIGHT_H
 #define LIGHT_H
 #include <WString.h> // required for getDescription

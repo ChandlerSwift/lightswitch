@@ -1,3 +1,12 @@
+// Enables serial printing of debug logs. Comment to disable:
+#define DEBUG 1
+
+#ifdef DEBUG
+ #define DEBUG_PRINT(x)  Serial.println (x)
+#else
+ #define DEBUG_PRINT(x)
+#endif
+
 #include <ESP8266WiFi.h>
 #include <DNSServer.h> // Local DNS Server used for redirecting all requests to the configuration portal
 #include <ESP8266WebServer.h>
@@ -176,7 +185,7 @@ void setup(void) {
 
   // Set up server
   server.begin();
-  //Serial.println("HTTP server started");
+  DEBUG_PRINT("HTTP server started");
 
   //  // Door handler
   //  pinMode(door_pin, INPUT_PULLUP);
