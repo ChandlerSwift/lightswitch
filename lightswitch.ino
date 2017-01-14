@@ -24,7 +24,7 @@ const char* www_password = "pass";
 
 bool authRequired = false;
 
-const int numLights = 5;
+const int numLights = 4;
 Light* lights[numLights];
 
 // int enable_switch_pin = 0;
@@ -54,20 +54,33 @@ void toggleLightOnButtonPress() {
   }
 }
 
+int status_led_pin = 2;
+int enable_switch_pin = 0;
+void set_enable_light() { // Called by interrupt on pin 0
+  digitalWrite(status_led_pin, digitalRead(enable_switch_pin) == LOW); // Set status light to switch state
+}
+
+bool enable_switch_is_off() {
+  return digitalRead(enable_switch_pin) == HIGH;
+}
+
 void setup(void) {
   // 3.3 Reference voltage for Logic Level Converter
   pinMode(12, OUTPUT);
   digitalWrite(12, HIGH);
 
+  // Indicator Light for switch
+  pinmode(status_led_pin, OUTPUT);
+  digitalWrite(status_led_pin, digitalRead(web_control_pin)); // set initial value on startup
+
   // Set up PWM
   analogWriteRange(255);
   analogWriteFreq(200);
 
-  lights[0] = new Light(2, "Built-in Status LED", true, true);       // built-in led
-  lights[1] = new Light(15, "Main Light");                           // Relay light
-  lights[2] = new Light(14, "RGB LED Strip: Red Channel", true);     // LED strip red channel
-  lights[3] = new Light(13, "RGB LED Strip: Green Channel", true);   // LED strip green channel
-  lights[4] = new Light(16, "RGB LED Strip: Blue Channel", true);    // LED strip blue channel
+  lights[0] = new Light(15, "Main Light");                           // Relay light
+  lights[1] = new Light(14, "RGB LED Strip: Red Channel", true);     // LED strip red channel
+  lights[2] = new Light(13, "RGB LED Strip: Green Channel", true);   // LED strip green channel
+  lights[3] = new Light(16, "RGB LED Strip: Blue Channel", true);    // LED strip blue channel
 
   // Start Filesystem
   SPIFFS.begin();
@@ -114,12 +127,16 @@ void setup(void) {
   }); 
 
   server.on("/light/set", []() {
-    if (!server.authenticate(www_username, www_password) && authRequired)
-      return server.requestAuthentication();
-    for (int i = 0; i < numLights; i++)
-      if (server.hasArg(String(i)))
-        lights[i]->set(server.arg(String(i)).toInt());
-    server.send(200, "text/plain", "Changes applied");
+    if (enable_switch_is_off()) {
+      server.send(503, "text/plain", "The controller has been switched offline.");
+    } else {
+      if (!server.authenticate(www_username, www_password) && authRequired)
+        return server.requestAuthentication();
+      for (int i = 0; i < numLights; i++)
+        if (server.hasArg(String(i)))
+          lights[i]->set(server.arg(String(i)).toInt());
+      server.send(200, "text/plain", "Changes applied");
+    }
   });
 
   server.on("/light/status", []() {
@@ -169,8 +186,10 @@ void setup(void) {
   //  pinMode(button_pin, INPUT_PULLUP);
   //  attachInterrupt(digitalPinToInterrupt(button_pin), toggleLightOnButtonPress, RISING);
 
-  //  // Online disable switch
-  //  pinMode(enable_switch_pin, INPUT_PULLUP);
+  // Web Control Disable Switch
+  pinMode(enable_switch_pin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(enable_switch_pin), set_enable_light, CHANGE);
+
 }
 
 void loop(void) {  
