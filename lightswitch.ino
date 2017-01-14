@@ -119,6 +119,13 @@ void setup(void) {
     server.streamFile(file, "text/html");
     file.close();
   });
+  
+  // Serve JS Implementation Page
+  server.on("/implementation.html", []() {
+    File file = SPIFFS.open("/implementation.html", "r");
+    server.streamFile(file, "text/html");
+    file.close();
+  });
 
   // Build and return JSON string with information about each light
   server.on("/lights", []() {
