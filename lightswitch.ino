@@ -99,7 +99,7 @@ void setup(void) {
 
   // Start Wifi Autoconfig
   WiFiManager wifiManager;
-  wifiManager.setSTAStaticIPConfig(IPAddress(192, 168, 1, 5), IPAddress(192, 168, 1, 1), IPAddress(255, 255, 255, 0));
+  wifiManager.setSTAStaticIPConfig(IPAddress(192, 168, 1, 10), IPAddress(192, 168, 1, 1), IPAddress(255, 255, 255, 0));
   wifiManager.autoConnect("ESP_CONFIG"); // Will set up as AP if necessary
 
   ///////////////////////////////////////
