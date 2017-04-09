@@ -46,20 +46,21 @@ void setLightStateOnDoorAction() {
 }
 
 int button_pin = 5;
+
 void toggleLightOnButtonPress() {
   /*
    * If the main light is on, turns off
    * If the main light is not on but the LEDs are, turns off LEDs
    * If no lights are on, turns on main light
    */
-  if (lights[1]->get() > 0)
+  if (lights[0]->get() > 0)
+    lights[0]->set(0);
+  else if (lights[1] > 0 || lights[2] > 0 || lights[3] > 0) {
     lights[1]->set(0);
-  else if (lights[2] > 0 || lights[3] > 0 || lights[4] > 0) {
     lights[2]->set(0);
     lights[3]->set(0);
-    lights[4]->set(0);
   } else {
-    lights[1]->set(1);
+    lights[0]->set(1);
   }
 }
 
@@ -198,9 +199,9 @@ void setup(void) {
   //  pinMode(door_pin, INPUT_PULLUP);
   //  attachInterrupt(digitalPinToInterrupt(door_pin), setLightStateOnDoorAction, CHANGE);
 
-  //  // Manual button handler
-  //  pinMode(button_pin, INPUT_PULLUP);
-  //  attachInterrupt(digitalPinToInterrupt(button_pin), toggleLightOnButtonPress, RISING);
+  // Manual button handler
+  pinMode(button_pin, INPUT_PULLUP);
+  attachInterrupt(digitalPinToInterrupt(button_pin), toggleLightOnButtonPress, RISING);
 
   // Web Control Disable Switch
   pinMode(enable_switch_pin, INPUT_PULLUP);
