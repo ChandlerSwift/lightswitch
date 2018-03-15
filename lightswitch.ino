@@ -140,7 +140,7 @@ void setup(void) {
                   ",\"description\":\"" +
                   lights[i]->getDescription() + "\"}"; // comma all but last time
     response += "]";
-    server.send(200, "text/plain", response);
+    server.send(200, "application/json", response);
   }); 
 
   server.on("/light/set", []() {
